@@ -19,7 +19,7 @@ public class PruebaApplication implements CommandLineRunner {
 
     public void run(String... args) throws Exception {
 
-        Flux<String> nombres = Flux.just("Andres", "Pedro", "", "Diego", "Juan")
+        Flux<String> nombres = Flux.just("Andres", "Pedro", "Maria", "Diego", "Juan")
                 .doOnNext(e -> {
 
                     if (e.isEmpty())
@@ -28,7 +28,15 @@ public class PruebaApplication implements CommandLineRunner {
                     System.out.println(e);
                 });
 
-        //Realizar el Flux
-        nombres.subscribe(e -> log.info(e), error -> log.error(error.getMessage()));
+        nombres.subscribe(e -> log.info(e),
+                error -> log.error(error.getMessage()),
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        log.info("Ha finalizado la ejecucion del observable con exito!");
+                    }
+                });
     }
+
+
 }
