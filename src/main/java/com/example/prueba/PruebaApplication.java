@@ -19,16 +19,18 @@ public class PruebaApplication implements CommandLineRunner {
 
     public void run(String... args) throws Exception {
 
-        Flux<Usuario> nombres = Flux.just(
-                        "Andres Mengano",
-                        "Pedro Sultano",
-                        "Maria Fulana",
-                        "Diego Fulano",
-                        "Juan Perez",
-                        "Bruce Willis",
-                        "Bruce Lee"
-                )
-                .map(nombre -> new Usuario(nombre.split(" ")[0].toUpperCase(),nombre.split(" ")[1].toUpperCase()))
+        Flux<String> nombres = Flux.just(
+                "Andres Mengano",
+                "Pedro Sultano",
+                "Maria Fulana",
+                "Diego Fulano",
+                "Juan Perez",
+                "Bruce Willis",
+                "Bruce Lee"
+        );
+
+        //Los observadores son inmutables, por cada operacion que hagamos a un flujo, este abrira una nueva instancia
+        Flux<Usuario> usuarios = nombres.map(nombre -> new Usuario(nombre.split(" ")[0].toUpperCase(), nombre.split(" ")[1].toUpperCase()))
                 .filter(usuario -> usuario.getNombre().equalsIgnoreCase("bruce"))
                 .doOnNext(usuario -> {
                     if (usuario == null)
@@ -41,7 +43,7 @@ public class PruebaApplication implements CommandLineRunner {
                     return usuario;
                 });
 
-        nombres.subscribe(e -> log.info(e.toString()),
+        usuarios.subscribe(e -> log.info(e.toString()),
                 error -> log.error(error.getMessage()),
                 new Runnable() {
                     @Override
