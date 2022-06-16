@@ -8,6 +8,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import reactor.core.Exceptions;
 import reactor.core.publisher.Flux;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SpringBootApplication
 public class PruebaApplication implements CommandLineRunner {
 
@@ -19,7 +22,7 @@ public class PruebaApplication implements CommandLineRunner {
 
     public void run(String... args) throws Exception {
 
-        Flux<String> nombres = Flux.just(
+        /*Flux<String> nombres = Flux.just(
                 "Andres Mengano",
                 "Pedro Sultano",
                 "Maria Fulana",
@@ -27,7 +30,19 @@ public class PruebaApplication implements CommandLineRunner {
                 "Juan Perez",
                 "Bruce Willis",
                 "Bruce Lee"
-        );
+        );*/
+
+        List<String> usuariosList = new ArrayList<>();
+        usuariosList.add("Andres Mengano");
+        usuariosList.add("Pedro Sultano");
+        usuariosList.add("Maria Fulana");
+        usuariosList.add("Diego Fulano");
+        usuariosList.add("Juan Perez");
+        usuariosList.add("Bruce Willis");
+        usuariosList.add("Bruce Lee");
+
+        //de una lista de string a un flux de string
+        Flux<String> nombres = Flux.fromIterable(usuariosList);
 
         //Los observadores son inmutables, por cada operacion que hagamos a un flujo, este abrira una nueva instancia
         Flux<Usuario> usuarios = nombres.map(nombre -> new Usuario(nombre.split(" ")[0].toUpperCase(), nombre.split(" ")[1].toUpperCase()))
