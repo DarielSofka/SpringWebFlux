@@ -19,16 +19,20 @@ public class PruebaApplication implements CommandLineRunner {
 
     public void run(String... args) throws Exception {
 
-        Flux<String> nombres = Flux.just("Andres", "Pedro", "Maria", "Diego", "Juan")
-                .doOnNext(e -> {
-
-                    if (e.isEmpty())
+        Flux<Usuario> nombres = Flux.just("Andres", "Pedro", "Maria", "Diego", "Juan")
+                .map(nombre -> new Usuario(nombre.toUpperCase(),null))
+                .doOnNext(usuario -> {
+                    if (usuario == null)
                         throw new RuntimeException("Nombres no pueden ser vacios");
-
-                    System.out.println(e);
+                    System.out.println(usuario);
+                })
+                .map(usuario -> {
+                    String nombre = usuario.getNombre().toLowerCase();
+                    usuario.setNombre(nombre);
+                    return usuario;
                 });
 
-        nombres.subscribe(e -> log.info(e),
+        nombres.subscribe(e -> log.info(e.toString()),
                 error -> log.error(error.getMessage()),
                 new Runnable() {
                     @Override
