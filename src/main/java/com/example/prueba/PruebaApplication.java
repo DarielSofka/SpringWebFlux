@@ -31,9 +31,51 @@ public class PruebaApplication implements CommandLineRunner {
         //ejemploFlatMap();
         //ejemploToString();
         //ejemploCollectList();
-        ejemploUsuarioComentarioFlatMap();
+        //ejemploUsuarioComentarioFlatMap();
+        //ejemploUsuarioComentarioZipWith();
+        ejemploUsuarioComentarioZipWithForma2();
     }
 
+    public void ejemploUsuarioComentarioZipWithForma2() {
+        Mono<Usuario> usuarioMono = Mono.fromCallable(() -> new Usuario("Jhon", "Doe"));
+
+        Mono<Comentarios> comentariosUsuarioMono = Mono.fromCallable(() -> {
+            Comentarios comentarios = new Comentarios();
+            comentarios.addComentarios("Hola pepe, qué tal!");
+            comentarios.addComentarios("Mañana voy a la playa");
+            comentarios.addComentarios("Estoy tomando el curso de spring con reactor");
+            return comentarios;
+        });
+
+        //Combinar 2 flujos
+        Mono<UsuarioComentario> usuarioConComentarios = usuarioMono
+                .zipWith(comentariosUsuarioMono)
+                .map(tuple -> {
+                    Usuario u = tuple.getT1();
+                    Comentarios c = tuple.getT2();
+                    return new UsuarioComentario(u, c);
+                });
+
+        usuarioConComentarios.subscribe(uc -> log.info(uc.toString()));
+    }
+
+    public void ejemploUsuarioComentarioZipWith() {
+        Mono<Usuario> usuarioMono = Mono.fromCallable(() -> new Usuario("Jhon", "Doe"));
+
+        Mono<Comentarios> comentariosUsuarioMono = Mono.fromCallable(() -> {
+            Comentarios comentarios = new Comentarios();
+            comentarios.addComentarios("Hola pepe, qué tal!");
+            comentarios.addComentarios("Mañana voy a la playa");
+            comentarios.addComentarios("Estoy tomando el curso de spring con reactor");
+            return comentarios;
+        });
+
+        //Combinar 2 flujos
+        Mono<UsuarioComentario> usuarioConComentarios = usuarioMono
+                .zipWith(comentariosUsuarioMono, (usuario, comentariosUsuario) -> new UsuarioComentario(usuario, comentariosUsuario));
+
+        usuarioConComentarios.subscribe(uc -> log.info(uc.toString()));
+    }
 
     public void ejemploUsuarioComentarioFlatMap() {
         Mono<Usuario> usuarioMono = Mono.fromCallable(() -> new Usuario("Jhon", "Doe"));
