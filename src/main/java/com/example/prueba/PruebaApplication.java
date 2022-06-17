@@ -7,6 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import reactor.core.Exceptions;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +30,24 @@ public class PruebaApplication implements CommandLineRunner {
         //ejemploIterable();
         //ejemploFlatMap();
         //ejemploToString();
-        ejemploCollectList();
+        //ejemploCollectList();
+        ejemploUsuarioComentarioFlatMap();
     }
 
+
+    public void ejemploUsuarioComentarioFlatMap() {
+        Mono<Usuario> usuarioMono = Mono.fromCallable(() -> new Usuario("Jhon", "Doe"));
+
+        Mono<Comentarios> comentariosUsuarioMono = Mono.fromCallable(() -> {
+            Comentarios comentarios = new Comentarios();
+            comentarios.addComentarios("Hola pepe, qué tal!");
+            comentarios.addComentarios("Mañana voy a la playa");
+            comentarios.addComentarios("Estoy tomando el curso de spring con reactor");
+            return comentarios;
+        });
+
+        usuarioMono.flatMap(u -> comentariosUsuarioMono.map(c -> new UsuarioComentario(u, c)))
+                .subscribe(uc -> log.info(uc.toString()));
+    }
 
 }
