@@ -13,6 +13,7 @@ import java.util.List;
 
 import static com.example.prueba.EjemploFlatMap.ejemploFlatMap;
 import static com.example.prueba.EjemploIterable.ejemploIterable;
+import static com.example.prueba.EjemploToString.ejemploToString;
 
 @SpringBootApplication
 public class PruebaApplication implements CommandLineRunner {
@@ -25,8 +26,8 @@ public class PruebaApplication implements CommandLineRunner {
 
     public void run(String... args) throws Exception {
         //ejemploIterable();
-
-        ejemploFlatMap();
+        //ejemploFlatMap();
+        ejemploToString();
     }
 
 
