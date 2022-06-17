@@ -11,6 +11,7 @@ import reactor.core.publisher.Flux;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.prueba.EjemploCollectList.ejemploCollectList;
 import static com.example.prueba.EjemploFlatMap.ejemploFlatMap;
 import static com.example.prueba.EjemploIterable.ejemploIterable;
 import static com.example.prueba.EjemploToString.ejemploToString;
@@ -27,7 +28,8 @@ public class PruebaApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         //ejemploIterable();
         //ejemploFlatMap();
-        ejemploToString();
+        //ejemploToString();
+        ejemploCollectList();
     }
 
 
