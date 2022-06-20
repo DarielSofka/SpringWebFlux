@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 
 import java.time.Duration;
+import java.util.concurrent.CountDownLatch;
 
 public class EjemploIntervalo {
 
@@ -20,7 +21,7 @@ public class EjemploIntervalo {
         rango.blockLast();
     }
 
-    public static void ejemploInterval() throws Exception {
+    public static void ejemploIntervalo() throws Exception {
         Flux<Integer> rango = Flux.range(1, 12);
         Flux<Long> retraso = Flux.interval(Duration.ofSeconds(1));
 
@@ -28,6 +29,23 @@ public class EjemploIntervalo {
         rango.zipWith(retraso, (ra,re) -> ra)
                 .doOnNext(i -> log.info(i.toString()))
                 .blockLast();
+    }
+
+    public static void ejemploIntervaloInfinito() throws Exception {
+        CountDownLatch latch = new CountDownLatch(1);
+
+        Flux.interval(Duration.ofSeconds(1))
+                .doOnTerminate(latch::countDown)
+                .flatMap(i -> {
+                    if(i >= 5)
+                        return Flux.error(new Exception("Solo hasta 5!"));
+                    return Flux.just(i);
+                })
+                .map(i -> "Hola"+i)
+                .retry(2)
+                .subscribe(s -> log.info(s), e -> log.error(e.getMessage()));
+
+        latch.await();
     }
 
 }
