@@ -14,8 +14,7 @@ import java.util.List;
 
 import static com.example.prueba.EjemploCollectList.ejemploCollectList;
 import static com.example.prueba.EjemploFlatMap.ejemploFlatMap;
-import static com.example.prueba.EjemploIntervalo.ejemploDelayElements;
-import static com.example.prueba.EjemploIntervalo.ejemploIntervaloInfinito;
+import static com.example.prueba.EjemploIntervalo.*;
 import static com.example.prueba.EjemploIterable.ejemploIterable;
 import static com.example.prueba.EjemploRange.ejemploRange;
 import static com.example.prueba.EjemploToString.ejemploToString;
@@ -39,7 +38,8 @@ public class PruebaApplication implements CommandLineRunner {
         //ejemploUsuarioComentarioZipWithForma2();
         //ejemploRange();
         //ejemploDelayElements();
-        ejemploIntervaloInfinito();
+        //ejemploIntervaloInfinito();
+        ejemploIntervaloDesdeCreate();
     }
 
     public void ejemploUsuarioComentarioZipWithForma2() {

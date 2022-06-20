@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 import reactor.core.publisher.Flux;
 
 import java.time.Duration;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CountDownLatch;
 
 public class EjemploIntervalo {
@@ -26,7 +28,7 @@ public class EjemploIntervalo {
         Flux<Long> retraso = Flux.interval(Duration.ofSeconds(1));
 
         //Combina ambos flujos pero el que queremos es el rango
-        rango.zipWith(retraso, (ra,re) -> ra)
+        rango.zipWith(retraso, (ra, re) -> ra)
                 .doOnNext(i -> log.info(i.toString()))
                 .blockLast();
     }
@@ -37,15 +39,42 @@ public class EjemploIntervalo {
         Flux.interval(Duration.ofSeconds(1))
                 .doOnTerminate(latch::countDown)
                 .flatMap(i -> {
-                    if(i >= 5)
+                    if (i >= 5)
                         return Flux.error(new Exception("Solo hasta 5!"));
                     return Flux.just(i);
                 })
-                .map(i -> "Hola"+i)
+                .map(i -> "Hola" + i)
                 .retry(2)
                 .subscribe(s -> log.info(s), e -> log.error(e.getMessage()));
 
         latch.await();
     }
 
+    public static void ejemploIntervaloDesdeCreate() throws Exception {
+        Flux.create(emitter -> {
+                    Timer timer = new Timer();
+                    timer.schedule(new TimerTask() {
+                        private Integer contador = 0;
+
+                        @Override
+                        public void run() {
+                            emitter.next(++contador);
+                            if (contador == 10) {
+                                timer.cancel();
+                                emitter.complete();
+                            }
+
+                            if (contador == 5) {
+                                timer.cancel();
+                                emitter.error(new Exception("Error, se ha detenido el flux en 5!"));
+                            }
+                        }
+                    }, 1000, 1000);
+                })
+                .subscribe(next -> log.info(next.toString()),
+                        error -> log.error(error.getMessage()),
+                        ()->log.info("Hemos Terminado"));
+
+
+    }
 }
