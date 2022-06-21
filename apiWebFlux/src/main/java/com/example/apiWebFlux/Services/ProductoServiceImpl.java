@@ -5,16 +5,18 @@ import com.example.apiWebFlux.Interfaces.ProductoInterface;
 import com.example.apiWebFlux.models.Categoria;
 import com.example.apiWebFlux.models.Producto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+@Service
 public class ProductoServiceImpl implements ProductoService {
 
     @Autowired
-    private ProductoInterface productoInterface;
+    ProductoInterface productoInterface;
 
     @Autowired
-    private CategoriaInterface categoriaInterface;
+    CategoriaInterface categoriaInterface;
 
     @Override
     public Flux<Producto> findAll() {
